@@ -1,5 +1,3 @@
 defmodule Msgunpacker do
-  def unpack(data) do
-
-  end
+  def unpack(<<0xc0>>) do nil end
 end
