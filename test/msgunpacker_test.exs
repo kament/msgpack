@@ -3,6 +3,14 @@ defmodule MsgunpackerTest do
   doctest Msgpacker
 
   test "should unpack nil" do
-    assert Msgunpacker.unpack(<<0xc0>>) == nil
+    assert Msgunpacker.unpack([0xc0]) == nil
+  end
+
+  test "should unpack true" do
+    assert Msgunpacker.unpack([0xc3]) == true
+  end
+
+  test "should unpack false" do
+    assert Msgunpacker.unpack([0xc2]) == false
   end
 end
