@@ -24,6 +24,13 @@ defmodule Msgunpacker do
   def unpack(<<0b101::3, length::5, value::binary>>) do
     binary_part(value, 0, length)
   end
-
-  def unpack(<<0xD9, length::8, value::size(length)>>), do: value
+  def unpack(<<0xD9, length::8, value::binary>>) do
+    binary_part(value, 0, length)
+  end
+  def unpack(<<0xDA, length::16, value::binary>>) do
+    binary_part(value, 0, length)
+  end
+  def unpack(<<0xDB, length::32, value::binary>>) do
+    binary_part(value, 0, length)
+  end
 end
