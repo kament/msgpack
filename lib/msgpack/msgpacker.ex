@@ -9,3 +9,7 @@ defimpl Msgpacker, for: Atom do
   def pack(false) do [0xc2] end
   def pack(true) do [0xc3] end
 end
+
+defimpl Msgpacker, for: Integer do
+  def pack(value) when value >= 0 and 128 > value, do: <<0::1, value::7>>
+end
