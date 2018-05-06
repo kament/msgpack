@@ -26,6 +26,12 @@ defimpl Msgpacker, for: Integer do
   defp pack_unsigned_int(value) when 18_446_744_073_709_551_616 > value, do: <<0xCF, value::64>>
 end
 
+defimpl Msgpacker, for: Float do
+  def pack(num) do
+    <<0xCB, num::float>>
+  end
+end
+
 defimpl Msgpacker, for: BitString do
   def pack(value) when is_binary(value) do
     size = byte_size(value)

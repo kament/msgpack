@@ -92,6 +92,16 @@ defmodule MsgpackerTest do
              <<0xD3, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00>>
   end
 
+  test "should pack float number 123.12" do
+    expected = <<0xcb, 0x40, 0x5e, 0xc7, 0xae, 0x14, 0x7a, 0xe1, 0x48>>
+    assert Msgpacker.pack(123.12) == expected
+  end
+
+  test "should pack float number 123.123123123123" do
+    expected = <<0xcb, 0x40, 0x5e, 0xc7, 0xe1, 0x3f, 0xce, 0xcc, 0x75>>
+    assert Msgpacker.pack(123.123123123123) == expected
+  end
+
   @doc "Test Bitstring pack"
   test "should correctly pack empty string" do
     assert Msgpacker.pack("") == <<0xA0>>
@@ -103,6 +113,7 @@ defmodule MsgpackerTest do
                0x20, 0x73, 0x74, 0x72, 0x69, 0x6E, 0x67, 0x20, 0x26>>
   end
 
+  @doc "Test map"
   test "should pack simple map - fixedmap" do
     map = %{
       "compact" => true,
@@ -116,6 +127,7 @@ defmodule MsgpackerTest do
     assert Msgpacker.pack(map) == expected
   end
 
+  @doc "Test array"
   test "should pack fixed array" do
     l = ["asd", 21, 21]
     expected = <<0x93, 0xA3, 0x61, 0x73, 0x64, 0x15, 0x15>>
