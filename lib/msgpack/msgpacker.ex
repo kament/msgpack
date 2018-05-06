@@ -11,9 +11,18 @@ defimpl Msgpacker, for: Atom do
 end
 
 defimpl Msgpacker, for: Integer do
-  def pack(value) when value >= 0 and 128 > value, do: <<0::1, value::7>>
-  def pack(value) when value >= 0 and 256 > value, do: <<0xCC, value::8>>
-  def pack(value) when value >= 0 and 0x10000 > value, do: <<0xCD, value::16>>
-  def pack(value) when value >= 0 and 0x100000000 > value, do: <<0xCE, value::32>>
-  def pack(value) when value >= 0 and 0x10000000000000000 > value, do: <<0xCF, value::64>>
+  def pack(value) when value >= 0, do: pack_unsigned_int(value)
+  def pack(value) when value < 0, do: pack_signed_int(value)
+
+  defp pack_signed_int(value) when value >= -32, do: value
+  defp pack_signed_int(value) when value >= -32_768, do: value
+  defp pack_signed_int(value) when value >= -256, do: value
+  defp pack_signed_int(value) when value >= -65_536, do: value
+  defp pack_signed_int(value) when value >= -2_147_483_648, do: value
+
+  defp pack_unsigned_int(value) when 128 > value, do: <<0::1, value::7>>
+  defp pack_unsigned_int(value) when 256 > value, do: <<0xCC, value::8>>
+  defp pack_unsigned_int(value) when 65_536 > value, do: <<0xCD, value::16>>
+  defp pack_unsigned_int(value) when 4_294_967_296 > value, do: <<0xCE, value::32>>
+  defp pack_unsigned_int(value) when 18_446_744_073_709_551_616 > value, do: <<0xCF, value::64>>
 end
