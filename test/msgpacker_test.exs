@@ -25,7 +25,7 @@ defmodule MsgpackerTest do
   end
 
   test "should pack int7" do
-    assert Msgpacker.pack(11) == <<0x0b>>
+    assert Msgpacker.pack(11) == <<0x0B>>
   end
 
   test "should correctly pack 128" do
@@ -45,11 +45,13 @@ defmodule MsgpackerTest do
   end
 
   test "should correctly pack 4,294,967,296" do
-    assert Msgpacker.pack(4_294_967_296) == <<0xCF, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00>>
+    assert Msgpacker.pack(4_294_967_296) ==
+             <<0xCF, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00>>
   end
 
   test "should correctly pack 18,446,744,073,709,551,615" do
-    assert Msgpacker.pack(18_446_744_073_709_551_615) == <<0xCF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF>>
+    assert Msgpacker.pack(18_446_744_073_709_551_615) ==
+             <<0xCF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF>>
   end
 
   test "should correctly pack -32" do
@@ -81,10 +83,12 @@ defmodule MsgpackerTest do
   end
 
   test "should correctly pack -2_147_483_648" do
-    assert Msgpacker.pack(-2_147_483_648) == <<0xD3, 0xFF, 0xFF, 0xFF, 0xFF, 0x80, 0x00, 0x00, 0x00>>
+    assert Msgpacker.pack(-2_147_483_648) ==
+             <<0xD3, 0xFF, 0xFF, 0xFF, 0xFF, 0x80, 0x00, 0x00, 0x00>>
   end
 
   test "should correctly pack -9_223_372_036_854_775_808" do
-    assert Msgpacker.pack(-9_223_372_036_854_775_808) == <<0xD3, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00>>
+    assert Msgpacker.pack(-9_223_372_036_854_775_808) ==
+             <<0xD3, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00>>
   end
 end

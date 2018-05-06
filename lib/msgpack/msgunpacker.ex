@@ -1,5 +1,4 @@
 defmodule Msgunpacker do
-
   @doc "Unpack msgpacked atom"
   def unpack([0xC0]), do: nil
 
