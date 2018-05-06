@@ -4,15 +4,15 @@ defmodule MsgunpackerTest do
 
   @doc "Test Atoms unpacking"
   test "should unpack nil" do
-    assert Msgunpacker.unpack([0xC0]) == nil
+    assert Msgunpacker.unpack(<<0xC0>>) == nil
   end
 
   test "should unpack true" do
-    assert Msgunpacker.unpack([0xC3]) == true
+    assert Msgunpacker.unpack(<<0xC3>>) == true
   end
 
   test "should unpack false" do
-    assert Msgunpacker.unpack([0xC2]) == false
+    assert Msgunpacker.unpack(<<0xC2>>) == false
   end
 
   @doc "Test Integer unpacking"

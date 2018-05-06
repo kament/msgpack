@@ -4,15 +4,15 @@ defmodule MsgpackerTest do
 
   @doc "Test Atoms packing"
   test "should pack nil" do
-    assert Msgpacker.pack(nil) == [0xC0]
+    assert Msgpacker.pack(nil) == <<0xC0>>
   end
 
   test "shpuld pack true" do
-    assert Msgpacker.pack(true) == [0xC3]
+    assert Msgpacker.pack(true) == <<0xC3>>
   end
 
   test "should pack false" do
-    assert Msgpacker.pack(false) == [0xC2]
+    assert Msgpacker.pack(false) == <<0xC2>>
   end
 
   @doc "Test Integer packing"
@@ -90,5 +90,27 @@ defmodule MsgpackerTest do
   test "should correctly pack -9_223_372_036_854_775_808" do
     assert Msgpacker.pack(-9_223_372_036_854_775_808) ==
              <<0xD3, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00>>
+  end
+
+  @doc "Test Bitstring pack"
+  test "should correctly pack empty string" do
+    assert Msgpacker.pack("") == <<0xA0>>
+  end
+
+  test "should correctly pack 'Not very long string &'" do
+    assert Msgpacker.pack("Not very long string &") ==
+             <<0xB6, 0x4E, 0x6F, 0x74, 0x20, 0x76, 0x65, 0x72, 0x79, 0x20, 0x6C, 0x6F, 0x6E, 0x67,
+               0x20, 0x73, 0x74, 0x72, 0x69, 0x6E, 0x67, 0x20, 0x26>>
+  end
+
+  test "should map simple map - fixedmap" do
+    map = %{
+      "compact" => true,
+      "schema" => 0
+    }
+
+    expected = <<0x82, 0xa7, 0x63, 0x6f, 0x6d, 0x70, 0x61, 0x63, 0x74, 0xc3, 0xa6, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x00>>
+
+    assert Msgpacker.pack(map) == expected
   end
 end

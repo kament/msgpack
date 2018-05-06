@@ -1,9 +1,9 @@
 defmodule Msgunpacker do
   @doc "Unpack msgpacked atom"
-  def unpack([0xC0]), do: nil
+  def unpack(<<0xC0>>), do: nil
 
-  def unpack([0xC2]), do: false
-  def unpack([0xC3]), do: true
+  def unpack(<<0xC2>>), do: false
+  def unpack(<<0xC3>>), do: true
 
   @doc "Unpack integar"
   def unpack(<<0::1, value::7>>), do: value
