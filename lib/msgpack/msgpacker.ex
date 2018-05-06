@@ -51,26 +51,42 @@ end
 
 defimpl Msgpacker, for: Map do
   def pack(map) do
-    size = Map.keys(map) |> Enum.count
+    size = Map.keys(map) |> Enum.count()
 
     cond do
       size <= 15 ->
         <<0b10000000 + size>> <> pack_map(map)
 
-        size <= 65_535 ->
-          <<0xDE, size::16>> <> pack_map(map)
+      size <= 65_535 ->
+        <<0xDE, size::16>> <> pack_map(map)
 
-        size <= 4_294_967_295 ->
-          <<0xDF, size::32>> <> pack_map(map)
+      size <= 4_294_967_295 ->
+        <<0xDF, size::32>> <> pack_map(map)
 
-        true ->
-          throw :not_implemented
+      true ->
+        throw(:not_implemented)
     end
   end
 
   defp pack_map(map) do
     Map.keys(map)
-      |> Enum.map(fn k -> @protocol.pack(k) <> @protocol.pack(map[k]) end)
-      |> Enum.reduce(<<>>, fn (p, a) -> a <> p end)
+    |> Enum.map(fn k -> @protocol.pack(k) <> @protocol.pack(map[k]) end)
+    |> Enum.reduce(<<>>, fn p, a -> a <> p end)
+  end
+end
+
+defimpl Msgpacker, for: List do
+  def pack(l) do
+    length = length(l)
+
+    cond do
+      length <= 15 ->
+        <<0b10010000 + length>> <> pack_list(l)
+    end
+  end
+
+  defp pack_list(l) do
+    l |> Enum.map(fn e -> @protocol.pack(e) end)
+    |> Enum.reduce(<<>>, fn p, a -> a <> p end)
   end
 end
