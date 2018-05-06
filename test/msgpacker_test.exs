@@ -13,4 +13,8 @@ defmodule MsgpackerTest do
   test "should pack false" do
     assert Msgpacker.pack(false) == [0xc2]
   end
+
+  test "should pack int8" do
+    assert Msgpacker.pack(11) == <<0x0b>>
+  end
 end

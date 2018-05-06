@@ -3,4 +3,8 @@ defmodule Msgunpacker do
 
   def unpack([0xc2]), do: false
   def unpack([0xc3]), do: true
+
+  def unpack(_) do
+    throw "not implemented"
+  end
 end

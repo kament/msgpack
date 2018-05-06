@@ -13,4 +13,8 @@ defmodule MsgunpackerTest do
   test "should unpack false" do
     assert Msgunpacker.unpack([0xc2]) == false
   end
+
+  test "should unpack int8" do
+    assert Msgunpacker.unpack(<<0x0b>>) == 11
+  end
 end
