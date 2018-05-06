@@ -21,10 +21,18 @@ defmodule MsgpackerTest do
   end
 
   test "should correctly pack 127" do
-    assert Msgpacker.pack(127) == <<0x7f>>
+    assert Msgpacker.pack(127) == <<0x7F>>
   end
 
   test "should pack int7" do
     assert Msgpacker.pack(11) == <<0x0b>>
+  end
+
+  test "should correctly pack 128" do
+    assert Msgpacker.pack(128) == <<0xCC, 0x80>>
+  end
+
+  test "should correctly pack 255" do
+    assert Msgpacker.pack(255) == <<0xCC, 0xFF>>
   end
 end

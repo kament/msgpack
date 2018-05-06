@@ -16,7 +16,7 @@ defmodule MsgunpackerTest do
   end
 
   @doc "Test Integer unpacking"
-  test "should unpack int8" do
+  test "should unpack int7" do
     assert Msgunpacker.unpack(<<0x0b>>) == 11
   end
 
@@ -25,6 +25,14 @@ defmodule MsgunpackerTest do
   end
 
   test "should correctly unpack 127" do
-    assert Msgunpacker.unpack(<<0x7f>>) == 127
+    assert Msgunpacker.unpack(<<0x7F>>) == 127
+  end
+
+  test "should correctly unpack 128" do
+    assert Msgunpacker.unpack(<<0xCC, 0x80>>) == 128
+  end
+
+  test "should correctly unpack 257" do
+    assert Msgunpacker.unpack(<<0xCC, 0xFF>>) == 255
   end
 end

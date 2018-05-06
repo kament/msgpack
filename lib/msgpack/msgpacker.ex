@@ -12,6 +12,5 @@ end
 
 defimpl Msgpacker, for: Integer do
   def pack(value) when value >= 0 and 128 > value, do: <<0::1, value::7>>
-
-  #def pack(value) when value >= 0 and 256 > value, do: <<0xCC, value::8>>
+  def pack(value) when value >= 0 and 256 > value, do: <<0xCC, value::8>>
 end
