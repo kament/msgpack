@@ -16,4 +16,14 @@ defmodule Msgunpacker do
   def unpack(<<0xD1, value::16>>), do: value - 65_536
   def unpack(<<0xD2, value::32>>), do: value - 4_294_967_296
   def unpack(<<0xD3, value::64>>), do: value - 18_446_744_073_709_551_616
+
+  @doc "Unpack float"
+  def unpack(<<0xCB, num::float>>), do: num
+
+  @doc "Unpack string"
+  def unpack(<<0b101::3, length::5, value::binary>>) do
+    binary_part(value, 0, length)
+  end
+
+  def unpack(<<0xD9, length::8, value::size(length)>>), do: value
 end

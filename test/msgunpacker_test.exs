@@ -113,4 +113,49 @@ defmodule MsgunpackerTest do
 
     assert Msgunpacker.unpack(msg_value) == -9_223_372_036_854_775_808
   end
+
+  @doc "Test float"
+  test "should unpack float number 123.12" do
+    input = <<0xCB, 0x40, 0x5E, 0xC7, 0xAE, 0x14, 0x7A, 0xE1, 0x48>>
+    assert Msgunpacker.unpack(input) == 123.12
+  end
+
+  test "should unpack float number 123.123123123123" do
+    input = <<0xCB, 0x40, 0x5E, 0xC7, 0xE1, 0x3F, 0xCE, 0xCC, 0x75>>
+    assert Msgunpacker.unpack(input) == 123.123123123123
+  end
+
+  @doc "Test Bitstring pack"
+  test "should correctly unpack empty string" do
+    assert Msgunpacker.unpack(<<0xA0>>) == ""
+  end
+
+  test "should correctly unpack 'Not very long string &'" do
+    input = <<0xB6, 0x4E, 0x6F, 0x74, 0x20, 0x76, 0x65, 0x72, 0x79, 0x20, 0x6C, 0x6F, 0x6E, 0x67,
+    0x20, 0x73, 0x74, 0x72, 0x69, 0x6E, 0x67, 0x20, 0x26>>
+
+    assert Msgunpacker.unpack(input) == "Not very long string &"
+  end
+
+  @doc "Test map"
+  test "should unpack simple map - fixedmap" do
+    expected = %{
+      "compact" => true,
+      "schema" => 0
+    }
+
+    input =
+      <<0x82, 0xA7, 0x63, 0x6F, 0x6D, 0x70, 0x61, 0x63, 0x74, 0xC3, 0xA6, 0x73, 0x63, 0x68, 0x65,
+        0x6D, 0x61, 0x00>>
+
+    assert Msgunpacker.unpack(input) == expected
+  end
+
+  @doc "Test array"
+  test "should unpack fixed array" do
+    expected = ["asd", 21, 21]
+    l = <<0x93, 0xA3, 0x61, 0x73, 0x64, 0x15, 0x15>>
+
+    assert Msgunpacker.unpack(l) == expected
+  end
 end

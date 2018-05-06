@@ -38,7 +38,7 @@ defimpl Msgpacker, for: BitString do
 
     cond do
       size < 32 ->
-        <<0b10100000 + size>> <> value
+        <<0b101::3, size::5>> <> value
 
       size < 255 ->
         <<0xD9, size::8>> <> value
