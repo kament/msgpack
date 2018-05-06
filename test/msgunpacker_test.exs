@@ -59,4 +59,52 @@ defmodule MsgunpackerTest do
   test "should correctly unpack 18,446,744,073,709,551,615" do
     assert Msgunpacker.unpack(<<0xCF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF>>) == 18_446_744_073_709_551_615
   end
+
+  test "should correctly unpack -1" do
+    assert Msgunpacker.unpack(<<0xFF>>) == -1
+  end
+
+  test "should correctly unpack -5" do
+    assert Msgunpacker.unpack(<<0xFB>>) == -5
+  end
+
+  test "should correctly unpack -27" do
+    assert Msgunpacker.unpack(<<0xE5>>) == -27
+  end
+
+  test "should correctly unpack -32" do
+    assert Msgunpacker.unpack(<<0xE0>>) == -32
+  end
+
+  test "should correctly unpack -33" do
+    assert Msgunpacker.unpack(<<0xD0, 0xDF>>) == -33
+  end
+
+  test "should correctly unpack -127" do
+    assert Msgunpacker.unpack(<<0xD0, 0x81>>) == -127
+  end
+
+  test "should correctly unpack -128" do
+    assert Msgunpacker.unpack(<<0xD1, 0xFF, 0x80>>) == -128
+  end
+
+  test "should correctly unpack -32_767" do
+    assert Msgunpacker.unpack(<<0xD1, 0x80, 0x01>>) == -32_767
+  end
+
+  test "should correctly unpack -32_768" do
+    assert Msgunpacker.unpack(<<0xD2, 0xFF, 0xFF, 0x80, 0x00>>) == -32_768
+  end
+
+  test "should correctly unpack -2_147_483_647" do
+    assert Msgunpacker.unpack(<<0xD2, 0x80, 0x00, 0x00, 0x01>>) == -2_147_483_647
+  end
+
+  test "should correctly unpack -2_147_483_648" do
+    assert Msgunpacker.unpack(<<0xD3, 0xFF, 0xFF, 0xFF, 0xFF, 0x80, 0x00, 0x00, 0x00>>) == -2_147_483_648
+  end
+
+  test "should correctly unpack -9_223_372_036_854_775_808" do
+    assert Msgunpacker.unpack(<<0xD3, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00>>) == -9_223_372_036_854_775_808
+  end
 end

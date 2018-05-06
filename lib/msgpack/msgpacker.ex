@@ -14,11 +14,11 @@ defimpl Msgpacker, for: Integer do
   def pack(value) when value >= 0, do: pack_unsigned_int(value)
   def pack(value) when value < 0, do: pack_signed_int(value)
 
-  defp pack_signed_int(value) when value >= -32, do: value
-  defp pack_signed_int(value) when value >= -32_768, do: value
-  defp pack_signed_int(value) when value >= -256, do: value
-  defp pack_signed_int(value) when value >= -65_536, do: value
-  defp pack_signed_int(value) when value >= -2_147_483_648, do: value
+  defp pack_signed_int(value) when value >= -32, do: <<0b111::3, value::5>>
+  defp pack_signed_int(value) when value >= -127, do: <<0xD0, value::8>>
+  defp pack_signed_int(value) when value >= -32_767, do: <<0xD1, value::16>>
+  defp pack_signed_int(value) when value >= -2_147_483_647, do: <<0xD2, value::32>>
+  defp pack_signed_int(value) when value >= -9_223_372_036_854_775_808, do: <<0xD3, value::64>>
 
   defp pack_unsigned_int(value) when 128 > value, do: <<0::1, value::7>>
   defp pack_unsigned_int(value) when 256 > value, do: <<0xCC, value::8>>
