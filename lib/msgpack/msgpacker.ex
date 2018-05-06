@@ -4,12 +4,14 @@ defprotocol Msgpacker do
 end
 
 defimpl Msgpacker, for: Atom do
-  def pack(nil) do [0xc0] end
+  def pack(nil) do [0xC0] end
 
-  def pack(false) do [0xc2] end
-  def pack(true) do [0xc3] end
+  def pack(false) do [0xC2] end
+  def pack(true) do [0xC3] end
 end
 
 defimpl Msgpacker, for: Integer do
   def pack(value) when value >= 0 and 128 > value, do: <<0::1, value::7>>
+
+  #def pack(value) when value >= 0 and 256 > value, do: <<0xCC, value::8>>
 end
