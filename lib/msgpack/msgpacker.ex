@@ -82,6 +82,15 @@ defimpl Msgpacker, for: List do
     cond do
       length <= 15 ->
         <<0b10010000 + length>> <> pack_list(l)
+
+        length <= 65_535 ->
+          <<0xDC, length::16>> <> pack_list(l)
+
+        length <= 4_294_967_295 ->
+          <<0xDD, length::32>> <> pack_list(l)
+
+        true ->
+          throw(:not_implemented)
     end
   end
 
