@@ -35,4 +35,12 @@ defmodule MsgpackerTest do
   test "should correctly pack 255" do
     assert Msgpacker.pack(255) == <<0xCC, 0xFF>>
   end
+
+  test "should correctly pack 65,536" do
+    assert Msgpacker.pack(65_536) == <<0xCE, 0x00, 0x01, 0x00, 0x00>>
+  end
+
+  test "should correctly pack 4,294,967,295" do
+    assert Msgpacker.pack(4_294_967_295) == <<0xCE, 0xFF, 0xFF, 0xFF, 0xFF>>
+  end
 end

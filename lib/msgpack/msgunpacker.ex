@@ -9,4 +9,6 @@ defmodule Msgunpacker do
   @doc "Unpack integar between 0 and 2^7"
   def unpack(<<0::1, value::7>>), do: value
   def unpack(<<0xCC, value::8>>), do: value
+  def unpack(<<0xCD, value::16>>), do: value
+  def unpack(<<0xCE, value::32>>), do: value
 end
