@@ -51,4 +51,12 @@ defmodule MsgunpackerTest do
   test "should correctly unpack 4,294,967,295" do
     assert Msgunpacker.unpack(<<0xCE, 0xFF, 0xFF, 0xFF, 0xFF>>) == 4_294_967_295
   end
+
+  test "should correctly unpack 4,294,967,296" do
+    assert Msgunpacker.unpack(<<0xCF, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00>>) == 4_294_967_296
+  end
+
+  test "should correctly unpack 18,446,744,073,709,551,615" do
+    assert Msgunpacker.unpack(<<0xCF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF>>) == 18_446_744_073_709_551_615
+  end
 end

@@ -43,4 +43,12 @@ defmodule MsgpackerTest do
   test "should correctly pack 4,294,967,295" do
     assert Msgpacker.pack(4_294_967_295) == <<0xCE, 0xFF, 0xFF, 0xFF, 0xFF>>
   end
+
+  test "should correctly pack 4,294,967,296" do
+    assert Msgpacker.pack(4_294_967_296) == <<0xCF, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00>>
+  end
+
+  test "should correctly pack 18,446,744,073,709,551,615" do
+    assert Msgpacker.pack(18_446_744_073_709_551_615) == <<0xCF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF>>
+  end
 end
