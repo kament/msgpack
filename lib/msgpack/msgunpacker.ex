@@ -54,16 +54,16 @@ defmodule Msgunpacker do
   end
 
   @doc "Unpack map"
-  def unpack(<<0b1000::4, length::4, value::size(length)-bytes, rest::binary>>) do
-    UnpackResult.new(unpack_map(value, %{}), rest)
+  def unpack(<<0b1000::4, length::4, rest::binary>>) do
+    unpack_map(rest, %{}, length)
   end
 
-  def unpack(<<0xDE::8, length::16, value::size(length)-bytes, rest::binary>>) do
-    UnpackResult.new(unpack_map(value, %{}), rest)
+  def unpack(<<0xDE::8, length::16, rest::binary>>) do
+    unpack_map(rest, %{}, length)
   end
 
-  def unpack(<<0xDF::8, length::32, value::size(length)-bytes, rest::binary>>) do
-    UnpackResult.new(unpack_map(value, %{}), rest)
+  def unpack(<<0xDF::8, length::32, rest::binary>>) do
+    unpack_map(rest, %{}, length)
   end
 
   defp unpack_list(<<>>, result, _) do
@@ -80,15 +80,20 @@ defmodule Msgunpacker do
     unpack_list(res.rest, [res.value | result], length - 1)
   end
 
-  defp unpack_map(<<value::binary>>, result_map) do
+  defp unpack_map(<<>>, result_map, _) do
+    UnpackResult.new(result_map, <<>>)
+  end
+
+  defp unpack_map(value, result_map, 0) do
+    UnpackResult.new(result_map, value)
+  end
+
+  defp unpack_map(value, result_map, index) do
     key_result = unpack(value)
     value_result = unpack(key_result.rest)
 
     map = Map.put_new(result_map, key_result.value, value_result.value)
 
-    case value_result.rest do
-      <<>> -> map
-      _ -> unpack_map(value_result.rest, map)
-    end
+    unpack_map(value_result.rest, map, index - 1)
   end
 end
