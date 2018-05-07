@@ -174,15 +174,15 @@ defmodule MsgpackerTest do
     assert Msgpack.pack(input) == expected
   end
 
-  @doc "Test array"
-  test "should pack fixed array" do
+  @doc "Test list"
+  test "should pack fixed list" do
     l = ["asd", 21, 21]
     expected = <<0x93, 0xA3, 0x61, 0x73, 0x64, 0x15, 0x15>>
 
     assert Msgpack.pack(l) == expected
   end
 
-  test "should pack 16bits array" do
+  test "should pack 16bits list" do
     l = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7]
 
     e =
@@ -190,5 +190,12 @@ defmodule MsgpackerTest do
         0x03, 0x04, 0x05, 0x06, 0x07>>
 
     assert Msgpack.pack(l) == e
+  end
+
+  test "should pack empty list" do
+    expected = <<0x90>>
+    input = []
+
+    assert Msgpack.pack(input) == expected
   end
 end

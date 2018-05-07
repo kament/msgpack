@@ -184,13 +184,13 @@ defmodule MsgunpackerTest do
   end
 
   @doc "Test array"
-  test "should unpack fixed array" do
+  test "should unpack fixed list" do
     expected = ["asd", 21, 21]
     l = <<0x93, 0xA3, 0x61, 0x73, 0x64, 0x15, 0x15>>
     assert Msgpack.unpack(l) == expected
   end
 
-  test "should unpack 16bits array" do
+  test "should unpack 16bits list" do
     e = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7]
 
     l =
@@ -200,16 +200,23 @@ defmodule MsgunpackerTest do
     assert Msgpack.unpack(l) == e
   end
 
-  test "should unpack fixed array of with one number" do
+  test "should unpack fixed list of with one number" do
     expected = [1]
     input = <<0x91, 0x01>>
 
     assert Msgpack.unpack(input) == expected
   end
 
-  test "should unpack fixed array of with one string" do
+  test "should unpack fixed list of with one string" do
     expected = ["asd"]
     input = <<0x91, 0xa3, 0x61, 0x73, 0x64>>
+
+    assert Msgpack.unpack(input) == expected
+  end
+
+  test "should unpack empty list" do
+    expected = []
+    input = <<0x90>>
 
     assert Msgpack.unpack(input) == expected
   end
