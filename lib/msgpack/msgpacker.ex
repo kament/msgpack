@@ -38,16 +38,16 @@ defimpl Msgpacker, for: BitString do
 
     cond do
       size < 32 ->
-        <<0b101::3, size::5>> <> value
+        <<0b101::3, size::5, value::binary>>
 
       size < 255 ->
-        <<0xD9, size::8>> <> value
+        <<0xD9::8, size::8, value::binary>>
 
       size < 65_535 ->
-        <<0xDA, size::16>> <> value
+        <<0xDA::8, size::16, value::binary>>
 
       size < 4_294_967_295 ->
-        <<0xDB, size::32>> <> value
+        <<0xDB::8, size::32, value::binary>>
 
       true ->
         throw(:not_implemented)
@@ -57,17 +57,17 @@ end
 
 defimpl Msgpacker, for: Map do
   def pack(map) do
-    size = Map.keys(map) |> Enum.count()
+    size = map_size(map)
 
     cond do
       size <= 15 ->
-        <<0b10000000 + size>> <> pack_map(map)
+        <<0b1000::4, size::4, pack_map(map)::binary>>
 
       size <= 65_535 ->
-        <<0xDE, size::16>> <> pack_map(map)
+        <<0xDE::8, size::16, pack_map(map)::binary>>
 
       size <= 4_294_967_295 ->
-        <<0xDF, size::32>> <> pack_map(map)
+        <<0xDF::8, size::32, pack_map(map)::binary>>
 
       true ->
         throw(:not_implemented)
@@ -75,8 +75,8 @@ defimpl Msgpacker, for: Map do
   end
 
   defp pack_map(map) do
-    Map.keys(map)
-    |> Enum.map(fn k -> @protocol.pack(k) <> @protocol.pack(map[k]) end)
+    Map.to_list(map)
+    |> Enum.map(fn {k, v} -> <<@protocol.pack(k)::binary, @protocol.pack(v)::binary>> end)
     |> Enum.reduce(<<>>, fn p, a -> a <> p end)
   end
 end
@@ -87,7 +87,7 @@ defimpl Msgpacker, for: List do
 
     cond do
       length <= 15 ->
-        <<0b10010000 + length>> <> pack_list(l)
+        <<0b1001::4, length::4>> <> pack_list(l)
 
       length <= 65_535 ->
         <<0xDC, length::16>> <> pack_list(l)

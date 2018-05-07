@@ -6,6 +6,6 @@ defmodule Msgpack do
 
   @doc "converts msgpack to data to JSON"
   def unpack(data) do
-    Msgunpacker.unpack(data)
+    Msgunpacker.unpack(data).value
   end
 end
