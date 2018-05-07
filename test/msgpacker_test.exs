@@ -174,6 +174,13 @@ defmodule MsgpackerTest do
     assert Msgpack.pack(input) == expected
   end
 
+  test "should map empty map" do
+    expected = <<0x80>>
+    input = %{}
+
+    assert Msgpack.pack(input) == expected
+  end
+
   @doc "Test list"
   test "should pack fixed list" do
     l = ["asd", 21, 21]

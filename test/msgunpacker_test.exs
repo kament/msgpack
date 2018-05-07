@@ -183,6 +183,13 @@ defmodule MsgunpackerTest do
     assert Msgpack.unpack(input) == expected
   end
 
+  test "should unpack empty map" do
+    expected = %{}
+    input = <<0x80>>
+
+    assert Msgpack.unpack(input) == expected
+  end
+
   @doc "Test array"
   test "should unpack fixed list" do
     expected = ["asd", 21, 21]
@@ -209,7 +216,7 @@ defmodule MsgunpackerTest do
 
   test "should unpack fixed list of with one string" do
     expected = ["asd"]
-    input = <<0x91, 0xa3, 0x61, 0x73, 0x64>>
+    input = <<0x91, 0xA3, 0x61, 0x73, 0x64>>
 
     assert Msgpack.unpack(input) == expected
   end
