@@ -199,4 +199,18 @@ defmodule MsgunpackerTest do
 
     assert Msgpack.unpack(l) == e
   end
+
+  test "should unpack fixed array of with one number" do
+    expected = [1]
+    input = <<0x91, 0x01>>
+
+    assert Msgpack.unpack(input) == expected
+  end
+
+  test "should unpack fixed array of with one string" do
+    expected = ["asd"]
+    input = <<0x91, 0xa3, 0x61, 0x73, 0x64>>
+
+    assert Msgpack.unpack(input) == expected
+  end
 end

@@ -41,15 +41,15 @@ defmodule Msgunpacker do
 
   @doc "Unpack List"
   # Not working for some reason
-  def unpack(<<0b1001, length::4, value::size(length)-bytes, rest::binary>>) do
+  def unpack(<<0b1001::4, length::4, value::size(length)-bytes, rest::binary>>) do
     UnpackResult.new(unpack_list(value, []), rest)
   end
 
-  def unpack(<<0xDC, length::16, value::size(length)-bytes, rest::binary>>) do
+  def unpack(<<0xDC::8, length::16, value::size(length)-bytes, rest::binary>>) do
     UnpackResult.new(unpack_list(value, []), rest)
   end
 
-  def unpack(<<0xDD, length::32, value::size(length)-bytes, rest::binary>>) do
+  def unpack(<<0xDD::8, length::32, value::size(length)-bytes, rest::binary>>) do
     UnpackResult.new(unpack_list(value, []), rest)
   end
 
