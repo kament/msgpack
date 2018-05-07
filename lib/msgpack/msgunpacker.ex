@@ -41,16 +41,16 @@ defmodule Msgunpacker do
 
   @doc "Unpack List"
   # Not working for some reason
-  def unpack(<<0b1001::4, length::4, value::size(length)-bytes, rest::binary>>) do
-    UnpackResult.new(unpack_list(value, []), rest)
+  def unpack(<<0b1001::4, length::4, rest::bits>>) do
+    unpack_list(rest, [], length)
   end
 
-  def unpack(<<0xDC::8, length::16, value::size(length)-bytes, rest::binary>>) do
-    UnpackResult.new(unpack_list(value, []), rest)
+  def unpack(<<0xDC::8, length::16, rest::binary>>) do
+    unpack_list(rest, [], length)
   end
 
-  def unpack(<<0xDD::8, length::32, value::size(length)-bytes, rest::binary>>) do
-    UnpackResult.new(unpack_list(value, []), rest)
+  def unpack(<<0xDD::8, length::32, rest::binary>>) do
+    unpack_list(rest, [], length)
   end
 
   @doc "Unpack map"
@@ -66,13 +66,18 @@ defmodule Msgunpacker do
     UnpackResult.new(unpack_map(value, %{}), rest)
   end
 
-  defp unpack_list(<<value::binary>>, result) do
-    res = unpack(value)
+  defp unpack_list(<<>>, result, _) do
+    UnpackResult.new(Enum.reverse(result), <<>>)
+  end
 
-    case res.rest do
-      <<>> -> Enum.reverse([res.value | result])
-      _ -> unpack_list(res.rest, [res.value | result])
-    end
+  defp unpack_list(value, result, 0) do
+    res = unpack(value)
+    UnpackResult.new(Enum.reverse([res.value | result]), res.rest)
+  end
+
+  defp unpack_list(value, result, length) do
+    res = unpack(value)
+    unpack_list(res.rest, [res.value | result], length - 1)
   end
 
   defp unpack_map(<<value::binary>>, result_map) do
