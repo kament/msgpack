@@ -87,7 +87,7 @@ defimpl Msgpacker, for: List do
 
     cond do
       length <= 15 ->
-        <<0b1001::4, length::4>> <> pack_list(l)
+        <<0b1001::4, length::4, pack_list(l)::binary>>
 
       length <= 65_535 ->
         <<0xDC, length::16>> <> pack_list(l)
